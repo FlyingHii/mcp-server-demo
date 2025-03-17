@@ -14,3 +14,7 @@ async function run() {
 }
 
 run();
+
+module.exports = {
+    takeScreenshot,
+};
