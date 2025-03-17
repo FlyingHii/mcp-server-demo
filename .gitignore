@@ -1,0 +1,4 @@
+.idea
+.aider*
+node_modules
+pnpm-lock.yaml
