@@ -1,11 +1,16 @@
-const puppeteer = require('puppeteer');
+const { takeScreenshot } = require('./puppeteer');
 
 async function run() {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto('https://www.google.com');
-  await page.screenshot({ path: 'example.png' });
-  await browser.close();
+  try {
+    await takeScreenshot({
+      url: 'https://www.google.com',
+      outputPath: 'google.png',
+      viewportWidth: 1280, // Example viewport width
+      viewportHeight: 720, // Example viewport height
+    });
+  } catch (error) {
+    console.error('Failed to take screenshot:', error);
+  }
 }
 
 run();
