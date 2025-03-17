@@ -7,7 +7,7 @@ send_request() {
   echo "$request_json"
   echo "$request_json" | jq .  # Optional: pretty print the JSON request
 
-  response=$(echo "$request_json" | pnpm start ) # Send request to server and capture output - server runs in foreground now
+  response=$(echo "$request_json" | pnpm start 2>/dev/null ) # Redirect stderr to /dev/null
 
   echo -e "\nResponse received:"
   echo "$response" | jq .    # Optional: pretty print the JSON response
