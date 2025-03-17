@@ -1,9 +1,6 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-//AI, start instruction. Make these change:
-// - how to start,  ai?
-//AI, end instruction
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 const NWS_API_BASE = "https://api.weather.gov";
 const USER_AGENT = "weather-app/1.0";
