@@ -1,8 +1,6 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import express from "express";
-import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 
 const NWS_API_BASE = "https://api.weather.gov";
 const USER_AGENT = "weather-app/1.0";
@@ -221,6 +219,8 @@ main().catch((error) => {
   console.error("Fatal error in main():", error);
   process.exit(1);
 });
+//AI, start instruction. Make these change:
+//ai!
 // import express from "express";
 // import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 // import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
@@ -247,3 +247,4 @@ main().catch((error) => {
 // });
 // 
 // app.listen(3001);
+//AI, end instruction
