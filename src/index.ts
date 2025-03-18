@@ -219,9 +219,8 @@ server.tool(
       query: z.string().describe("The search query"),
     },
     async ({ query }) => {
-//AI, start instruction. Make these change:
-// - make curl to the searchUrl, ai!
       const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
+      // TODO: Implement the actual curl command here
       return {
         content: [
           {
@@ -230,7 +229,6 @@ server.tool(
           },
         ],
       };
-//AI, end instruction
     },
 );
 async function main() {
