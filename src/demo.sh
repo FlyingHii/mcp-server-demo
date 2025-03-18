@@ -5,12 +5,7 @@ node ./build/index.js &
 SERVER_PID=$!
 
 # Wait for the server to start (adjust the sleep time if needed)
-sleep 2
-
-# Function to make SSE requests (not used in this updated version)
-# sse_request() {
-#   curl -s http://localhost:3001/sse
-# }
+sleep 5
 
 # Function to send a message to the server
 send_message() {
