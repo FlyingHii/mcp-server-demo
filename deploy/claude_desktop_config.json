@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "weather": {
+      "command": "bash",
+      "args": [
+        "-c",
+        "tsc && node /home/hai-vo/Documents/personal/code/mcp-puppeteer/build/index.js"
+      ]
+    }
+  }
+}
