@@ -220,7 +220,7 @@ server.tool(
     },
     async ({ query }) => {
 //AI, start instruction. Make these change:
-// - code this to call the url, ai!
+// - call the url here, ai!
       const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
       // TODO: Implement the actual curl command here
       return {
