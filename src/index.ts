@@ -214,7 +214,7 @@ server.tool(
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Weather MCP Server running on stdio");
+  console.error("Weather MCP Server running 3001");
 }
 
 main().catch((error) => {
@@ -235,5 +235,8 @@ app.post("/messages", async (req: Request, res: Response) => {
   // implemented here, for simplicity.)
   // await transport.handlePostMessage(req, res);
 });
+//AI, start instruction. Make these change:
+// - apply call this url `https://www.perplexity.ai/search?q=%s` for searching, ai!
+//AI, end instruction
 
 app.listen(3001);
