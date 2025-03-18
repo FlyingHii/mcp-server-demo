@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Start the server in the background
+npx tsc
 node ./build/index.js &
 SERVER_PID=$!
 
