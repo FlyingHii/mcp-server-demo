@@ -248,15 +248,24 @@ app.get("/sse", async (req: Request, res: Response) => {
   await server.connect(transport);
 });
 
-//AI, start instruction. Make these change:
-// - start search with perplexity.ai
-//ai!
 app.post("/messages", async (req: Request, res: Response) => {
+  const message = req.body;
+  if (message && message.tool === "search") {
+    const { query } = message.arguments;
+    const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
+    res.json({
+      content: [
+        {
+          type: "text",
+          text: `Search Perplexity.ai: ${searchUrl}`,
+        },
+      ],
+    });
+  }
   // Note: to support multiple simultaneous connections, these messages will
   // need to be routed to a specific matching transport. (This logic isn't
   // implemented here, for simplicity.)
   // await transport.handlePostMessage(req, res);
 });
-//AI, end instruction
 
 app.listen(3001);
