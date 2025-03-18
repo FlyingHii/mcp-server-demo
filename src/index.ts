@@ -249,7 +249,11 @@ app.get("/sse", async (req: Request, res: Response) => {
 });
 
 app.post("/messages", async (req: Request, res: Response) => {
+//AI, start instruction. Make these change:
+// - how to get json from post ai?
   const message = req.body;
+  console.log('aaaa req', req)
+//AI, end instruction
   if (message && message.tool === "search") {
     const { query } = message.arguments;
     const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
@@ -262,6 +266,14 @@ app.post("/messages", async (req: Request, res: Response) => {
       ],
     });
   }
+  res.json({
+    content: [
+      {
+        type: "text",
+        text: `Search Perplexity.ai:`,
+      },
+    ],
+  });
   // Note: to support multiple simultaneous connections, these messages will
   // need to be routed to a specific matching transport. (This logic isn't
   // implemented here, for simplicity.)
