@@ -220,16 +220,38 @@ server.tool(
     },
     async ({ query }) => {
       const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
-      // TODO: Implement the actual curl command here
-      // For now, just return the URL
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Search Perplexity.ai: ${searchUrl}`,
-          },
-        ],
-      };
+      try {
+        const response = await fetch(searchUrl);
+        if (!response.ok) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Error searching Perplexity.ai: ${response.statusText}`,
+              },
+            ],
+          };
+        }
+        const data = await response.text(); // Assuming the response is HTML or text
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Search results from Perplexity.ai:\n${data.substring(0, 500)}...`, // Display first 500 chars
+            },
+          ],
+        };
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Error searching Perplexity.ai: ${error}`,
+            },
+          ],
+        };
+      }
     },
 );
 
@@ -259,14 +281,39 @@ app.post("/messages", async (req: Request, res: Response) => {
   if (message && message.tool === "search" && message.arguments && message.arguments.query) {
     const { query } = message.arguments;
     const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
-    res.json({
-      content: [
-        {
-          type: "text",
-          text: `Search Perplexity.ai: ${searchUrl}`,
-        },
-      ],
-    });
+    try {
+      const response = await fetch(searchUrl);
+      if (!response.ok) {
+        res.json({
+          content: [
+            {
+              type: "text",
+              text: `Error searching Perplexity.ai: ${response.statusText}`,
+            },
+          ],
+        });
+        return;
+      }
+      const data = await response.text(); // Assuming the response is HTML or text
+      res.json({
+        content: [
+          {
+            type: "text",
+            text: `Search results from Perplexity.ai:\n${data.substring(0, 500)}...`, // Display first 500 chars
+          },
+        ],
+      });
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      res.json({
+        content: [
+          {
+            type: "text",
+            text: `Error searching Perplexity.ai: ${error}`,
+          },
+        ],
+      });
+    }
   } else if (message && message.tool === "get-alerts" && message.arguments && message.arguments.state) {
     // Handle get-alerts tool
     const { state } = message.arguments;
