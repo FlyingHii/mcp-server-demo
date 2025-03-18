@@ -9,14 +9,12 @@
         "/Users/YOUR_USERNAME/Downloads"
       ]
     },
-//AI, start instruction. Make these change:
-// - add tsc to this command to build before run, ai?
     "weather": {
-      "command": "node",
+      "command": "bash",
       "args": [
-        "/home/hai-vo/Documents/personal/code/mcp-puppeteer/build/index.js"
+        "-c",
+        "tsc && node /home/hai-vo/Documents/personal/code/mcp-puppeteer/build/index.js"
       ]
     }
-//AI, end instruction
   }
 }
