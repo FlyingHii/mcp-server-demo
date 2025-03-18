@@ -252,7 +252,7 @@ app.get("/sse", async (req: Request, res: Response) => {
 app.post("/messages", async (req: Request, res: Response) => {
   const message = req.body;
   console.log('aaaa req', req.body)
-  if (message && message.tool === "search") {
+  if (message && message.tool === "search" && message.arguments && message.arguments.query) {
     const { query } = message.arguments;
     const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
     res.json({
@@ -263,19 +263,138 @@ app.post("/messages", async (req: Request, res: Response) => {
         },
       ],
     });
+  } else if (message && message.tool === "get-alerts" && message.arguments && message.arguments.state) {
+    // Handle get-alerts tool
+    const { state } = message.arguments;
+    const stateCode = state.toUpperCase();
+    const alertsUrl = `${NWS_API_BASE}/alerts?area=${stateCode}`;
+    const alertsData = await makeNWSRequest<AlertsResponse>(alertsUrl);
+
+    if (!alertsData) {
+      res.json({
+        content: [
+          {
+            type: "text",
+            text: "Failed to retrieve alerts data",
+          },
+        ],
+      });
+      return;
+    }
+
+    const features = alertsData.features || [];
+    if (features.length === 0) {
+      res.json({
+        content: [
+          {
+            type: "text",
+            text: `No active alerts for ${stateCode}`,
+          },
+        ],
+      });
+      return;
+    }
+
+    const formattedAlerts = features.map(formatAlert);
+    const alertsText = `Active alerts for ${stateCode}:\n\n${formattedAlerts.join("\n")}`;
+    res.json({
+      content: [
+        {
+          type: "text",
+          text: alertsText,
+        },
+      ],
+    });
+  } else if (message && message.tool === "get-forecast" && message.arguments && message.arguments.latitude && message.arguments.longitude) {
+    // Handle get-forecast tool
+    const { latitude, longitude } = message.arguments;
+    // Get grid point data
+    const pointsUrl = `${NWS_API_BASE}/points/${latitude.toFixed(4)},${longitude.toFixed(4)}`;
+    const pointsData = await makeNWSRequest<PointsResponse>(pointsUrl);
+
+    if (!pointsData) {
+      res.json({
+        content: [
+          {
+            type: "text",
+            text: `Failed to retrieve grid point data for coordinates: ${latitude}, ${longitude}. This location may not be supported by the NWS API (only US locations are supported).`,
+          },
+        ],
+      });
+      return;
+    }
+
+    const forecastUrl = pointsData.properties?.forecast;
+    if (!forecastUrl) {
+      res.json({
+        content: [
+          {
+            type: "text",
+            text: "Failed to get forecast URL from grid point data",
+          },
+        ],
+      });
+      return;
+    }
+
+    // Get forecast data
+    const forecastData = await makeNWSRequest<ForecastResponse>(forecastUrl);
+    if (!forecastData) {
+      res.json({
+        content: [
+          {
+            type: "text",
+            text: "Failed to retrieve forecast data",
+          },
+        ],
+      });
+      return;
+    }
+
+    const periods = forecastData.properties?.periods || [];
+    if (periods.length === 0) {
+      res.json({
+        content: [
+          {
+            type: "text",
+            text: "No forecast periods available",
+          },
+        ],
+      });
+      return;
+    }
+
+    // Format forecast periods
+    const formattedForecast = periods.map((period: ForecastPeriod) =>
+        [
+          `${period.name || "Unknown"}:`,
+          `Temperature: ${period.temperature || "Unknown"}°${period.temperatureUnit || "F"}`,
+          `Wind: ${period.windSpeed || "Unknown"} ${period.windDirection || ""}`,
+          `${period.shortForecast || "No forecast available"}`,
+          "---",
+        ].join("\n"),
+    );
+
+    const forecastText = `Forecast for ${latitude}, ${longitude}:\n\n${formattedForecast.join("\n")}`;
+    res.json({
+      content: [
+        {
+          type: "text",
+          text: forecastText,
+        },
+      ],
+    });
   }
-  res.json({
-    content: [
-      {
-        type: "text",
-        text: `Search Perplexity.ai:`,
-      },
-    ],
-  });
-  // Note: to support multiple simultaneous connections, these messages will
-  // need to be routed to a specific matching transport. (This logic isn't
-  // implemented here, for simplicity.)
-  // await transport.handlePostMessage(req, res);
+  else {
+    res.json({
+      content: [
+        {
+          type: "text",
+          text: "Invalid request",
+        },
+      ],
+    });
+  }
 });
 
 app.listen(3001);
