@@ -211,25 +211,6 @@ server.tool(
       };
     },
 );
-
-server.tool(
-    "search",
-    "Search the web using Perplexity.ai",
-    {
-      query: z.string().describe("The search query"),
-    },
-    async ({ query }) => {
-      const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Search Perplexity.ai: ${searchUrl}`,
-          },
-        ],
-      };
-    },
-);
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
@@ -254,5 +235,8 @@ app.post("/messages", async (req: Request, res: Response) => {
   // implemented here, for simplicity.)
   // await transport.handlePostMessage(req, res);
 });
+//AI, start instruction. Make these change:
+// - apply call this url `https://www.perplexity.ai/search?q=` + "search query" for searching, ai!
+//AI, end instruction
 
 app.listen(3001);
