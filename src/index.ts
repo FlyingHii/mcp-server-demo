@@ -242,6 +242,7 @@ main().catch((error) => {
 });
 
 const app = express();
+app.use(express.json()); // Add this line to parse JSON bodies BEFORE the routes
 
 app.get("/sse", async (req: Request, res: Response) => {
   const transport = new SSEServerTransport("/messages", res);
@@ -249,11 +250,8 @@ app.get("/sse", async (req: Request, res: Response) => {
 });
 
 app.post("/messages", async (req: Request, res: Response) => {
-//AI, start instruction. Make these change:
-// - how to get json from post ai?
   const message = req.body;
-  console.log('aaaa req', req)
-//AI, end instruction
+  console.log('aaaa req', req.body)
   if (message && message.tool === "search") {
     const { query } = message.arguments;
     const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
