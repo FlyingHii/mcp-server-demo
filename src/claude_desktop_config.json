@@ -5,15 +5,18 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/Users/YOUR_USERNAME/Desktop",  // Replace with your actual path
-        "/Users/YOUR_USERNAME/Downloads" // Replace with your actual path
+        "/Users/YOUR_USERNAME/Desktop",
+        "/Users/YOUR_USERNAME/Downloads"
       ]
     },
+//AI, start instruction. Make these change:
+// - add tsc to this command to build before run, ai?
     "weather": {
       "command": "node",
       "args": [
-        "/path/to/your/weather-server/build/index.js"  // Replace with the actual path
+        "/home/hai-vo/Documents/personal/code/mcp-puppeteer/build/index.js"
       ]
     }
+//AI, end instruction
   }
 }
