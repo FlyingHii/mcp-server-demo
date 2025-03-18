@@ -27,6 +27,11 @@ echo "Getting forecast for San Francisco..."
 send_message '{"tool": "get-forecast", "arguments": {"latitude": 37.7749, "longitude": -122.4194}}'
 sleep 1
 
+# Search for "apple"
+echo "Searching for apple..."
+send_message '{"tool": "search", "arguments": {"query": "apple"}}'
+sleep 1
+
 echo "Weather demo complete."
 
 # Clean up: Kill the server process
