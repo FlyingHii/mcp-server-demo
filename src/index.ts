@@ -219,6 +219,8 @@ server.tool(
       query: z.string().describe("The search query"),
     },
     async ({ query }) => {
+//AI, start instruction. Make these change:
+// - make curl to the searchUrl, ai!
       const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
       return {
         content: [
@@ -228,6 +230,7 @@ server.tool(
           },
         ],
       };
+//AI, end instruction
     },
 );
 async function main() {
@@ -253,7 +256,6 @@ app.get("/sse", async (req: Request, res: Response) => {
 
 app.post("/messages", async (req: Request, res: Response) => {
   const message = req.body;
-  console.log('aaaa req', req.body)
   if (message && message.tool === "search" && message.arguments && message.arguments.query) {
     const { query } = message.arguments;
     const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
