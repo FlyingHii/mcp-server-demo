@@ -234,6 +234,8 @@ async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error("Weather MCP Server running 3001");
+  // Keep the process alive
+  process.stdin.resume();
 }
 
 main().catch((error) => {
